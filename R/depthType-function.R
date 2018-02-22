@@ -10,6 +10,16 @@
 
 
 depthType <- function(startDepth, endDepth, cutoff) {
-  ifelse(startDepth > cutoff | endDepth > cutoff, "subsurface", "surface")
-}
+  
+  startDepth[is.na(startDepth)] <- 99999
+  endDepth[is.na(endDepth)] <- 99999
+  
+  ifelse(startDepth != 99999 & endDepth != 99999,
+    ifelse(startDepth > cutoff | endDepth > cutoff,"subsurface","surface"),
+    ifelse(startDepth == 99999 & endDepth != 99999, 
+           ifelse(endDepth > cutoff, "subsurface", "surface"),
+           ifelse(startDepth != 99999 & endDepth == 99999, 
+                  ifelse(startDepth > cutoff, "subsurface", "surface"),
+                  "unknown")))
 
+}  
